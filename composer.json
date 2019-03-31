@@ -1,0 +1,16 @@
+{
+    "name": "symfony/blockchain",
+    "description": "blockchain money",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jack Zler",
+            "email": "724174309@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "davedevelopment/phpmig": "^1.2@dev"
+    }
+}
