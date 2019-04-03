@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+
+{% block title %}后台管理系统-用户注册{% endblock %}
+{% block body %}
+<form action="{{ path('register') }}" method="post">
+    <label for="username">用户名:</label>
+    <input type="text" id="username" name="username" value="" />
+    <label for="password">密码:</label>
+    <input type="password" id="password" name="password" />
+    <button type="submit">注册</button>
+</form>
+{% endblock %}

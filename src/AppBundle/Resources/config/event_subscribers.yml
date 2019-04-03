@@ -1,0 +1,7 @@
+services:
+    user_event_subscriber:
+        class: Biz\User\Event\UserEventSubscriber
+        calls:
+            - [setBiz, ['@biz']]
+        tags:
+            - { name: biz.event.subscriber }

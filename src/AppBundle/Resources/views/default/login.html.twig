@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+{% block title %}后台管理系统-用户登陆{% endblock %}
+{% block body %}
+<form action="{{ path('login') }}" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="_username" value="{{ last_username }}" />
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="_password" />
+    <label for="code">请输入验证码:</label>
+    <input type="text" name="code" id="code"/>
+    <img src="{{ path('captch') }}" alt="img" />
+    <button type="submit">登陆</button>
+    <a href="{{ path('register') }}">注册</a>
+</form>
+{% endblock %}

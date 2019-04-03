@@ -1,0 +1,128 @@
+<?php
+
+namespace Biz\{{moduleName}}\Service\Impl;
+
+use Biz\BaseService;
+use Biz\{{moduleName}}\Service\{{bigName}}Service;
+use AppBundle\Common\ArrayToolkit;
+use Biz\Common\Exception\InvalidArgumentException;
+use Biz\Common\Exception\AccessDeniedException;
+use Biz\Common\Exception\NotFoundException;
+
+class {{bigName}}ServiceImpl extends BaseService implements {{bigName}}Service
+{
+    public function get{{bigName}}($id)
+    {
+        return $this->get{{bigName}}Dao()->get($id);
+    }
+
+    public function create{{bigName}}(array ${{smallName}})
+    {
+        ${{smallName}} = $this->filterCreate{{bigName}}Fields(${{smallName}});
+
+        ${{smallName}} = $this->get{{bigName}}Dao()->create(${{smallName}});
+
+        $this->dispatchEvent('{{underscoreName}}.created', ${{smallName}});
+
+        $this->getLogService()->info('{{underscoreName}}', 'create', 'Create {{bigName}}', ${{smallName}});
+
+        return ${{smallName}};
+    }
+
+    public function update{{bigName}}($id, array $fields)
+    {
+        ${{smallName}} = $this->get{{bigName}}($id);
+
+        if (empty(${{smallName}})) {
+            throw new NotFoundException(sprintf('{{bigName}} id#%s not found', $id));
+        }
+
+        $this->checkCurrentUserAccess(${{smallName}});
+
+        $fields = $this->filterUpdate{{bigName}}Fields($fields);
+
+        ${{smallName}} = $this->get{{bigName}}Dao()->update($id, $fields);
+
+        $this->dispatchEvent('{{underscoreName}}.updated', ${{smallName}});
+
+        $this->getLogService()->info('{{underscoreName}}', 'update', 'Update {{bigName}}', ${{smallName}});
+
+        return ${{smallName}};
+    }
+
+    public function find{{bigPluralName}}ByIds($ids)
+    {
+        return ArrayToolkit::index($this->get{{bigName}}Dao()->findByIds($ids), 'id');
+    }
+
+    public function search{{bigPluralName}}($conditions, $orderBy, $start, $limit)
+    {
+        return $this->get{{bigName}}Dao()->search($conditions, $orderBy, $start, $limit);
+    }
+
+    public function count{{bigPluralName}}($conditions)
+    {
+        return $this->get{{bigName}}Dao()->count($conditions);
+    }
+
+    protected function filterCreate{{bigName}}Fields($fields)
+    {
+        $requiredFields = array(
+            
+        );
+
+        if (!ArrayToolkit::requires($fields, $requiredFields)) {
+            throw new InvalidArgumentException(sprintf('Missing required fields when creating {{bigName}}#%s', json_encode($fields)));
+        }
+
+        $default = array(
+            {{tableFieldsWithDefaultValue|raw}}
+        );
+
+        $fields = ArrayToolkit::parts($fields, array_merge($requiredFields, array_keys($default)));
+        $fields = array_merge($default, $fields);
+
+        return $fields;
+    }
+
+    protected function filterUpdate{{bigName}}Fields($fields)
+    {
+        // 只保留允许更新的字段
+        $fields = ArrayToolkit::parts($fields, array(
+            {{tableFields|raw}}
+        ));
+
+        return $fields;
+    }
+
+    protected function checkCurrentUserAccess($data)
+    {
+        $currentUser = $this->getCurrentUser();
+
+        if ($currentUser->isSuperAdmin()) {
+            return;
+        }
+
+        if (isset($data['user_id']) && $data['user_id'] == $currentUser->getId()) {
+            return;
+        }
+
+        throw new AccessDeniedException('Access Denied when checkCurrentUserAccess in {{bigName}}Service');
+    }
+
+    /**
+     * @return \Biz\{{moduleName}}\Dao\{{bigName}}Dao
+     */
+    protected function get{{bigName}}Dao()
+    {
+        return $this->createDao('{{moduleName}}:{{bigName}}Dao');
+    }
+
+    /**
+     * @return \Biz\System\Service\LogService
+     */
+    protected function getLogService()
+    {
+        return $this->createService('System:LogService');
+    }
+}

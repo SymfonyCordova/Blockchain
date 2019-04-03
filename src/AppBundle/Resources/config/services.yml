@@ -1,0 +1,10 @@
+imports:
+    - { resource: listeners.yml }
+    - { resource: event_subscribers.yml }
+
+services:
+    biz.service_provider.collector:
+        class: Biz\ServiceProviderCollector
+
+    biz.event_subscriber.collector:
+        class: Biz\EventSubscriberCollector

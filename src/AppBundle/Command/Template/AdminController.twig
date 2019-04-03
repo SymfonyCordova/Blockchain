@@ -1,0 +1,94 @@
+<?php
+namespace AppBundle\Controller\Admin;
+
+use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Common\Paginator;
+use Biz\Common\Exception\NotFoundException;
+
+class {{bigName}}Controller extends BaseController
+{
+    public function indexAction (Request $request)
+    {
+        $conditions = $request->query->all();
+
+        $paginator = new Paginator(
+            $request,
+            $this->get{{bigName}}Service()->count{{bigPluralName}}($conditions),
+            15
+        );
+
+        ${{smallPluralName}} = $this->get{{bigName}}Service()->search{{bigPluralName}}(
+            $conditions,
+            array('created_time' => 'DESC'),
+            $paginator->getOffsetCount(),
+            $paginator->getPerPageCount()
+        );
+
+        return $this->render('AppBundle:admin/{{dashCaseName}}:index.html.twig', array(
+            '{{underscorePluralName}}' => ${{smallPluralName}},
+            'paginator' => $paginator
+        ));
+    }
+
+    public function createAction(Request $request)
+    {
+        if ($request->getMethod() == 'POST') {
+            $fields = $request->request->all();
+
+            $this->get{{bigName}}Service()->create{{bigName}}($fields);
+
+            return $this->createJsonResponse(true);
+        }
+
+        $default{{bigName}} = array(
+            'id' => 0,
+            {{ tableFieldsWithDefaultValue|raw }}
+        );
+
+        return $this->render('AppBundle:admin/{{dashCaseName}}:modal.html.twig', array(
+            '{{underscoreName}}' => $default{{bigName}},
+        ));
+    }
+
+    public function editAction(Request $request, $id)
+    {
+        ${{smallName}} = $this->get{{bigName}}Service()->get{{bigName}}($id);
+
+        if (empty(${{smallName}})) {
+            throw new NotFoundException(sprintf('{{smallName}} id#%s not found', $id));
+        }
+
+        if ($request->getMethod() == 'POST') {
+            $fields = $request->request->all();
+
+            $this->get{{bigName}}Service()->update{{bigName}}($id, $fields);
+
+            return $this->createJsonResponse(true);
+        }
+
+        return $this->render('AppBundle:admin/{{dashCaseName}}:modal.html.twig', array(
+            '{{underscoreName}}' => ${{smallName}},
+        ));
+    }
+
+    public function showAction(Request $request, $id)
+    {
+        ${{smallName}} = $this->get{{bigName}}Service()->get{{bigName}}($id);
+
+        if (empty(${{smallName}})) {
+            throw new NotFoundException(sprintf('{{smallName}} id#%s not found', $id));
+        }
+
+        return $this->render('AppBundle:admin/{{dashCaseName}}:show.html.twig', array(
+            '{{underscoreName}}' => ${{smallName}},
+        ));
+    }
+
+    /**
+     * @return \Biz\{{moduleName}}\Service\{{bigName}}Service
+     */
+    protected function get{{bigName}}Service()
+    {
+        return $this->createService('{{moduleName}}:{{bigName}}Service');
+    }
+}

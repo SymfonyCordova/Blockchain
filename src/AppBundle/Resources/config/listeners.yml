@@ -1,0 +1,12 @@
+services:
+    app.listener.exception_listener:
+        class: AppBundle\EventListener\ExceptionListener
+        arguments:    ['@service_container']
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority:255 }
+
+    app.listener.login_success.listener:
+        class: AppBundle\EventListener\LoginSuccessHandler
+        arguments: ['@service_container', '@security.authorization_checker']
+        tags:
+            - { name: kernel.event_listener, event: security.interactive_login, method: onSecurityInteractiveLogin, priority:255 }

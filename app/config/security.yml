@@ -1,0 +1,62 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/security.html
+parameters:
+    app.current_user.class: Biz\User\CurrentUser
+
+services:
+    app.user_provider:
+        class: Biz\User\UserProvider
+        arguments: ['@service_container']
+
+    app.admin_authenticator:
+        class: AppBundle\GuardAuthenticator\AdminAuthenticator
+#        arguments: ['@service_container']
+
+security:
+    providers:
+        user_provider:
+            id: app.user_provider
+
+    encoders:
+        "%app.current_user.class%":
+            algorithm: sha256
+            encode_as_base64: true
+            iterations: 5000
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        disabled:
+            pattern: ^/(anon|callback)/
+            security: false
+
+        main:
+            anonymous: ~
+            provider: user_provider
+            guard:
+                authenticators:
+                    - app.admin_authenticator
+
+#            form_login:
+#                login_path: login
+#                check_path: login
+#                failure_handler: topxia.authentication.failure_handler
+#                success_handler: topxia.authentication.success_handler
+#
+#        secured_area:
+#            pattern: ^/admin/
+#            provider: user_provider
+#            guard:
+#                authenticators:
+#                    - app.admin_authenticator
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    access_control:
+        - { path: ^/crontab, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }

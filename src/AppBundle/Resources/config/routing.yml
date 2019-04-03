@@ -1,0 +1,19 @@
+homepage:
+    path: /
+    defaults: { _controller: AppBundle:Home/Home:index }
+    methods: [GET]
+
+login:
+    path: /login
+    defaults: { _controller: AppBundle:Login:index }
+    methods: [GET, POST]
+
+register:
+    path: /register
+    defaults: { _controller: AppBundle:Register:index }
+    methods: [GET, POST]
+
+captch:
+    path: /captch
+    defaults: { _controller: AppBundle:ImageCode:captcha }
+    methods: [GET]

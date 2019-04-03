@@ -1,0 +1,65 @@
+<?php
+
+namespace Tests\{{moduleName}}\Service;
+
+use Biz\BaseTestCase;
+
+class {{bigName}}ServiceTest extends BaseTestCase
+{
+    public function testCreate{{bigName}}()
+    {
+        $created{{bigPluralName}} = $this->create{{bigPluralName}}();
+        $created{{bigName}} = $created{{bigPluralName}}[0];
+
+        ${{smallPluralName}} = $this->mock{{bigPluralName}}();
+        ${{smallName}} = ${{smallPluralName}}[0];
+
+        $this->assertArrayEquals(${{smallName}}, $created{{bigName}}, array_keys(${{smallName}}));
+    }
+
+    public function testUpdate{{bigName}}()
+    {
+        $created{{bigPluralName}} = $this->create{{bigPluralName}}();
+        $created{{bigName}} = $created{{bigPluralName}}[0];
+
+        $fields = array(
+            'name' => 'new name for test',
+        );
+
+        $update{{bigName}} = $this->get{{bigName}}Service()->update{{bigName}}($created{{bigName}}['id'], $fields);
+
+        $this->assertEquals($fields['name'], $update{{bigName}}['name']);
+    }
+
+    protected function create{{bigPluralName}}()
+    {
+        ${{smallPluralName}} = $this->mock{{bigPluralName}}();
+
+        $created{{bigPluralName}} = array();
+
+        foreach (${{smallPluralName}} as $key => ${{smallName}}) {
+            $created{{bigPluralName}}[$key] = $this->get{{bigName}}Service()->create{{bigName}}(${{smallName}});
+        }
+
+        return $created{{bigPluralName}};
+    }
+
+    protected function mock{{bigPluralName}}()
+    {
+        ${{smallPluralName}} = array(
+            array(
+            	{{tableFieldsWithDefaultValue|raw}}
+            ),
+        );
+
+        return ${{smallPluralName}};
+    }
+
+    /**
+     * @return \Biz\{{moduleName}}\Service\{{bigName}}Service
+     */
+    protected function get{{bigName}}Service()
+    {
+        return $this->createService('{{moduleName}}:{{bigName}}Service');
+    }
+}

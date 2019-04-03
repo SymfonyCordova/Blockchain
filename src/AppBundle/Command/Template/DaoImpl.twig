@@ -1,0 +1,32 @@
+<?php
+
+namespace Biz\{{moduleName}}\Dao\Impl;
+
+use Biz\{{moduleName}}\Dao\{{bigName}}Dao;
+use Biz\Common\Dao\BaseDaoImpl;
+
+class {{bigName}}DaoImpl extends BaseDaoImpl implements {{bigName}}Dao
+{
+    protected $table = '{{tableName}}';
+
+    public function declares()
+    {
+        return array(
+            'conditions' => array(
+                {{ daoConditionFields|raw }}
+            ),
+            'timestamps' => array(
+                {{ timestampFields|raw }}
+            ),
+            'orderbys' => array(
+                {{ timestampFields|raw }}
+            ),
+            'serializes' => array(),
+        );
+    }
+
+    public function findByIds(array $ids)
+    {
+        return $this->findInField('id', $ids);
+    }
+}
