@@ -9,6 +9,7 @@ use Biz\Common\Exception\AccessDeniedException;
 use Biz\Common\Exception\NotFoundException;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use AppBundle\Common\SimpleValidator;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 class UserServiceImpl extends BaseService implements UserService
 {
@@ -77,7 +78,7 @@ class UserServiceImpl extends BaseService implements UserService
         }
 
         if(empty($user)){
-            throw new NotFoundException(sprintf('User keyword#%s not found', $keyword));
+            throw new UsernameNotFoundException(sprintf('User keyword#%s not found', $keyword));
         }
 
         return $user;

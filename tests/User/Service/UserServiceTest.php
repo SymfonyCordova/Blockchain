@@ -1,82 +1,19 @@
 <?php
-
 namespace Tests\User\Service;
-
-use Biz\BaseTestCase;
+use Tests\BaseTestCase;
 
 class UserServiceTest extends BaseTestCase
 {
-    public function testCreateUser()
+    public function testPushAndPop()
     {
-        $createdUsers = $this->createUsers();
-        $createdUser = $createdUsers[0];
+        $stack = array();
+        $this->assertEquals(0, count($stack));
 
-        $users = $this->mockUsers();
-        $user = $users[0];
+        array_push($stack, 'foo');
+        $this->assertEquals('foo', $stack[count($stack)-1]);
+        $this->assertEquals(1, count($stack));
 
-        $this->assertArrayEquals($user, $createdUser, array_keys($user));
-    }
-
-    public function testUpdateUser()
-    {
-        $createdUsers = $this->createUsers();
-        $createdUser = $createdUsers[0];
-
-        $fields = array(
-            'name' => 'new name for test',
-        );
-
-        $updateUser = $this->getUserService()->updateUser($createdUser['id'], $fields);
-
-        $this->assertEquals($fields['name'], $updateUser['name']);
-    }
-
-    protected function createUsers()
-    {
-        $users = $this->mockUsers();
-
-        $createdUsers = array();
-
-        foreach ($users as $key => $user) {
-            $createdUsers[$key] = $this->getUserService()->createUser($user);
-        }
-
-        return $createdUsers;
-    }
-
-    protected function mockUsers()
-    {
-        $users = array(
-            array(
-            	'username' => '', 
-'nickname' => '', 
-'mobile' => '', 
-'email' => '', 
-'type' => '', 
-'salt' => '', 
-'password' => '', 
-'roles' => '', 
-'small_avatar' => '', 
-'medium_avatar' => '', 
-'large_avatar' => '', 
-'sex' => '', 
-'locked' => '', 
-'new_notification_num' => 0, 
-'created_ip' => '', 
-'login_time' => 0, 
-'login_ip' => '', 
-
-            ),
-        );
-
-        return $users;
-    }
-
-    /**
-     * @return \Biz\User\Service\UserService
-     */
-    protected function getUserService()
-    {
-        return $this->createService('User:UserService');
+        $this->assertEquals('foo', array_pop($stack));
+        $this->assertEquals(0, count($stack));
     }
 }

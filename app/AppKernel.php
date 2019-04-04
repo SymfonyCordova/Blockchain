@@ -3,6 +3,7 @@
 use Biz\User\CurrentUser;
 use Codeages\Biz\Framework\Provider\DoctrineServiceProvider;
 use Codeages\Biz\Framework\Provider\MonologServiceProvider;
+use Codeages\Biz\Framework\Provider\RedisServiceProvider;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -106,6 +107,15 @@ class AppKernel extends Kernel
 
         $biz->register(new DoctrineServiceProvider());
         $biz->register(new MonologServiceProvider());
+        $biz->register(new RedisServiceProvider(), array(
+            'redis.options' => array(
+                'host' => '10.0.50.86:6379',
+                'password' => '',
+                'timeout' => 2,
+                'retry_interval' => 100,
+                'prefix' => '',
+            ),
+        ));
 
 //        $providerCollector = $this->getContainer()->get('biz.service_provider.collector');
 //        foreach ($providerCollector->all() as $provider) {

@@ -13,7 +13,6 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-
         return parent::onAuthenticationFailure($request, $exception);
     }
 

@@ -10,7 +10,10 @@
     "type": "project",
     "description": "blockchain money",
     "autoload": {
-        "psr-4": { "": "src/" },
+        "psr-4": {
+            "": "src/",
+            "Tests\\": "tests/"
+        },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
     "require": {

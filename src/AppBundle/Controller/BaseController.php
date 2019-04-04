@@ -19,4 +19,13 @@ abstract class BaseController extends Controller
 
         return $biz->service($alias);
     }
+
+    /**
+     * @return \Redis
+     */
+    protected function getRedis(){
+        $biz = $this->getBiz();
+
+        return $biz['redis'];
+    }
 }

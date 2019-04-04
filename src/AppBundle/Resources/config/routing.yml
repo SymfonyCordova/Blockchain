@@ -17,3 +17,8 @@ captch:
     path: /captch
     defaults: { _controller: AppBundle:ImageCode:captcha }
     methods: [GET]
+
+sns:
+    path: /sms
+    defaults: { _controller: AppBundle:Sms:send }
+    methods: [GET]
