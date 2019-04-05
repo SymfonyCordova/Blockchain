@@ -105,6 +105,10 @@ class CurrentUser implements AdvancedUserInterface, EquatableInterface, \Seriali
         return $this['id'];
     }
 
+    public function getMobile(){
+        return $this['mobile'];
+    }
+
     /**
      * 仅用于清除可能存储的纯文本密码（或类似凭据 密码）
      */

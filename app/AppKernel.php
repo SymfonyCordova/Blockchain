@@ -109,7 +109,7 @@ class AppKernel extends Kernel
         $biz->register(new MonologServiceProvider());
         $biz->register(new RedisServiceProvider(), array(
             'redis.options' => array(
-                'host' => '10.0.50.86:6379',
+                'host' => '192.168.1.17:6379',
                 'password' => '',
                 'timeout' => 2,
                 'retry_interval' => 100,

@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 class HomeController extends BaseController
 {
     public function indexAction(Request $request){
-        //return new JsonResponse($request->getSession()->get("captcha"));
+        //return new JsonResponse($this->generateUrl('phone_code_login'));
         return $this->render("AppBundle:Home:index.html.twig", array());
     }
 

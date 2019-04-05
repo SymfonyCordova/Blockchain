@@ -17,4 +17,16 @@
     <button type="submit">登陆</button>
     <a href="{{ path('register') }}">注册</a>
 </form>
+<hr>
+    <h1>手机验证码登陆</h1>
+    <form action="{{ path('phone_code_login') }}" method="post">
+        <label for="mobile">mobile:</label>
+        <input type="text" id="mobile" name="mobile" value="18755680552" />
+        <label for="code">请输入验证码:</label>
+        <input type="text" name="code" id="code"/>
+        <a href="{{ path('sms') }}?mobile=18755680552">发送验证码</a>
+        <input type="checkbox" id="remember_me" name="_remember_me" checked />
+        <label for="remember_me">Keep me logged in</label>
+        <button type="submit">登陆</button>
+    </form>
 {% endblock %}

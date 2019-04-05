@@ -8,6 +8,11 @@ login:
     defaults: { _controller: AppBundle:Login:index }
     methods: [GET, POST]
 
+phone_code_login:
+    path: /phone/login
+    defaults: { _controller: AppBundle:Phone:login }
+    methods: [GET, POST]
+
 register:
     path: /register
     defaults: { _controller: AppBundle:Register:index }
@@ -18,7 +23,7 @@ captch:
     defaults: { _controller: AppBundle:ImageCode:captcha }
     methods: [GET]
 
-sns:
+sms:
     path: /sms
     defaults: { _controller: AppBundle:Sms:send }
-    methods: [GET]
+    methods: [GET, POST]
