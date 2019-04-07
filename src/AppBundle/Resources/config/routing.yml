@@ -27,3 +27,8 @@ sms:
     path: /sms
     defaults: { _controller: AppBundle:Sms:send }
     methods: [GET, POST]
+
+auth_qq:
+    path: /auth/qq
+    defaults: { _controller: AppBundle:Auth:qq }
+    methods: [GET, POST]

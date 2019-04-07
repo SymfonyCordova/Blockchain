@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
@@ -30,15 +31,15 @@ class MobileCodeGuardAuthenticator extends AbstractGuardAuthenticator{
     public function getCredentials(Request $request)
     {
         if($request->getPathInfo() !== $this->generateUrl('phone_code_login')){
-            return;
+            return ;
         }
 
         if($request->getMethod() !== "POST"){
-            return;
+            return ;
         }
 
         if(!$this->getRequestPostHasAttribute('mobile') || !$this->getRequestPostHasAttribute('code')){
-            return;
+            return ;
         }
 
         return array(
@@ -49,9 +50,7 @@ class MobileCodeGuardAuthenticator extends AbstractGuardAuthenticator{
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $mobile = $credentials['mobile'];
-
-        return $userProvider->loadUserByUsername($mobile);
+        return $userProvider->loadUserByUsername($credentials['mobile']);
     }
 
     public function checkCredentials($credentials, UserInterface $user)

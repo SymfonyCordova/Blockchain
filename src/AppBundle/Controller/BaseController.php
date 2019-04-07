@@ -2,9 +2,19 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class BaseController extends Controller
 {
+    protected function createJsonResponse($data = '', $message = '', $errorCode = 0)
+    {
+        return new JsonResponse(array(
+            'data' => $data,
+            'errmsg' => $message,
+            'errcode' => $errorCode === false ? 1 : $errorCode,
+        ));
+    }
+
     /**
      * @return \Codeages\Biz\Framework\Context\Biz
      */

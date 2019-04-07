@@ -1,10 +1,17 @@
 parameters:
     app.current_user.class: Biz\User\CurrentUser
+    app.qq.user: Biz\User\QqUser
     mobile.secret: MobileToken
+    qq_app_id:
+    qq_app_secret:
 
 services:
     app.user_provider:
         class: Biz\User\UserProvider
+        arguments: ['@service_container']
+
+    app.qq_provider:
+        class: Biz\User\QqUserProvider
         arguments: ['@service_container']
 
     app.simple_form_authenticator:
@@ -15,10 +22,17 @@ services:
         class: AppBundle\GuardAuthenticator\MobileCodeGuardAuthenticator
         arguments: ["@service_container", "%mobile.secret%"]
 
+    app.qq_authenticator:
+        class: AppBundle\GuardAuthenticator\QqGuardAuthenticator
+        arguments: ["@service_container", "%qq_app_id%", "%qq_app_secret%"]
+
 security:
     providers:
         user_provider:
             id: app.user_provider
+
+        qq_provider:
+            id: app.qq_provider
 
     encoders:
         "%app.current_user.class%":
@@ -31,41 +45,39 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        disabled:
-            pattern: ^/(anon|callback)/
-            security: false
-
+        qq_area:
+            anonymous: ~
+            pattern: ^/auth/.*
+            provider: qq_provider
+            guard:
+                authenticators:
+                    - app.qq_authenticator
         main:
             anonymous: ~
             remember_me:
                 secret: '%secret%'
                 lifetime: 60
             provider: user_provider
-            guard:
-                authenticators:
-                    - app.mobile_code_authenticator
             simple_form:
                 authenticator: app.simple_form_authenticator
                 login_path: login
                 check_path: login
+            guard:
+                authenticators:
+                    - app.mobile_code_authenticator
 #            form_login:
 #                login_path: login
 #                check_path: login
-#                failure_handler: topxia.authentication.failure_handler
-#                success_handler: topxia.authentication.success_handler
-#
-#        secured_area:
-#            pattern: ^/admin/
-#            provider: user_provider
-#            guard:
-#                authenticators:
-#                    - app.admin_authenticator
+#                failure_handler: authentication.failure_handler
+#                success_handler: authentication.success_handler
+
+
 
     role_hierarchy:
+        ROLE_USER:        ROLE_THIRD_USER
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     access_control:
-        - { path: ^/crontab, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/auth/qq, roles: ROLE_THIRD_USER }

@@ -1,32 +1,199 @@
 {% extends "base.html.twig" %}
-{% block title %}后台管理系统-用户登陆{% endblock %}
+{% block title %}用户登陆{% endblock %}
+{% block stylesheets %}
+    {% stylesheets '@AppBundle/Resources/public/css/signin.css' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
 {% block body %}
-{% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-{% endif %}
-<form action="{{ path('login') }}" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" />
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="_password" />
-    <label for="code">请输入验证码:</label>
-    <input type="text" name="code" id="code"/>
-    <img src="{{ path('captch') }}" alt="img" />
-    <input type="checkbox" id="remember_me" name="_remember_me" checked />
-    <label for="remember_me">Keep me logged in</label>
-    <button type="submit">登陆</button>
-    <a href="{{ path('register') }}">注册</a>
-</form>
-<hr>
-    <h1>手机验证码登陆</h1>
-    <form action="{{ path('phone_code_login') }}" method="post">
-        <label for="mobile">mobile:</label>
-        <input type="text" id="mobile" name="mobile" value="18755680552" />
-        <label for="code">请输入验证码:</label>
-        <input type="text" name="code" id="code"/>
-        <a href="{{ path('sms') }}?mobile=18755680552">发送验证码</a>
-        <input type="checkbox" id="remember_me" name="_remember_me" checked />
-        <label for="remember_me">Keep me logged in</label>
-        <button type="submit">登陆</button>
-    </form>
+<div class="container">
+
+    <div class="row">
+        <h2 class ="text-center text-muted">区块链</h2>
+    </div>
+    <div class="row" id="error-alert" style="display:none">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 alert alert-danger text-center" role="alert" id="error-message"></div>
+        <div class="col-md-3"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#usernameLogin" data-toggle="tab">密码登陆</a></li>
+                        <li ><a href="#mobileLogin" data-toggle="tab">手机登陆</a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="usernameLogin">
+                            <form class="form-horizontal" method="post" action="{{ path('login') }}">
+                                <div class="form-group input-group-sm">
+                                    <label for="username" class="col-sm-2 control-label">账号</label>
+                                    <div class="col-sm-8">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="username"
+                                               name="_username"
+                                               placeholder="请输入用户名">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="col-sm-2 control-label">密码</label>
+                                    <div class="col-sm-8">
+                                        <input type="password"
+                                               class="form-control"
+                                               id="password"
+                                               name="_password"
+                                               placeholder="请输入密码">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="code" class="col-sm-2 control-label">验证码</label>
+                                    <div class="col-sm-4">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="code"
+                                               name="code"
+                                               placeholder="请输入验证码">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <img src="{{ path('captch') }}"
+                                             alt="img"
+                                             style="cursor: pointer"
+                                             onclick="chageImg(this)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-1 col-sm-3">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"
+                                                       id="remember_me"
+                                                       name="_remember_me"
+                                                       > 记住我
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="submit" class="btn btn-default" value="登陆">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- mobileLogin -->
+                        <div class="tab-pane" id="mobileLogin">
+                            <form class="form-horizontal" method="post" action="{{ path('phone_code_login') }}">
+                                <div class="form-group input-group-sm">
+                                    <label for="mobile" class="col-sm-2 control-label">手机号</label>
+                                    <div class="col-sm-8">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="mobile"
+                                               name="mobile"
+                                               placeholder="请输入手机号">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="messageCode" class="col-sm-2 control-label">验证码</label>
+                                    <div class="col-sm-4">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="messageCode"
+                                               name="code"
+                                               placeholder="请输入验证码">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <button type="button"
+                                                class="btn btn-default"
+                                                id="sendbtn"
+                                                onclick="sendMessage(this)">发送验证码</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-1 col-sm-3">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"
+                                                       id="remember_me"
+                                                       name="_remember_me"
+                                                       checked> 记住我
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="submit" class="btn btn-default" value="登陆">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    第三方登陆
+                    <a href="{{ path('auth_qq') }}">QQ登陆</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        function chageImg(img){
+            img.src = img.src +"?time="+new Date().getTime();
+        }
+        function sendMessage(btn) {
+            var mobile = $("#mobile").val();
+            $.ajax({
+                type:'post',
+                url:'{{ path("sms") }}',
+                data:{ "mobile": mobile},
+                cache:false,
+                dataType:'json',
+                success:function(data){
+                    if( data.errcode == 0 )
+                    {
+                        $(btn).attr("disabled",'disabled');
+                        $.setTimeA(60);
+                    }else{
+                        getErrorMessage(data.errmsg);
+                    }
+                },
+                error:function(){
+                    getErrorMessage("发送验证码失败");
+                }
+            });
+        }
+
+        function getErrorMessage(errorMsg){
+            if(errorMsg){
+                $("#error-message").html(errorMsg);
+                $("#error-alert").fadeTo(2000, 500).slideUp(500, function(){
+                    $("#error-alert").slideUp(500);
+                });
+            }
+        }
+
+        $(function () {
+            var error =  "{% if error %}{{ error.messageKey|trans(error.messageData, 'security') }}{% endif %}"
+            getErrorMessage(error);
+            $.extend({
+                "setTimeA":function(b) {
+                    if(parseInt(b)>1) {
+                        var timeStart = parseInt(b) - 1;
+                        $("#sendbtn").text(timeStart);
+                        setTimeout(function(){$.setTimeA(timeStart);},1000);
+                    }else{
+                        $("#sendbtn").removeAttr("disabled").text("发送验证码");
+                    }
+                }})
+        })
+
+    </script>
 {% endblock %}

@@ -2,12 +2,31 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block meta %}
+            <meta name="renderer" content="webkit">
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+            <meta content="{{ csrf_token(default_csrf_token_id) }}" name="csrf-token" />
+        {% endblock %}
+        <title>{% block title %}Welcome! {% endblock %}</title>
+        {% block basecss %}
+            {% stylesheets '@AppBundle/Resources/public/css/bootstrap.min.css' filter='cssrewrite' %}
+                <link rel="stylesheet" href="{{ asset_url }}" />
+            {% endstylesheets %}
+        {% endblock %}
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% block body %}
+        {% endblock %}
+        {% block basejs %}
+            {% javascripts
+                '@AppBundle/Resources/public/js/jquery-3.3.1.min.js'
+                '@AppBundle/Resources/public/js/bootstrap.js'
+            filter='cssrewrite' %}
+            <script src="{{ asset_url }}"></script>
+            {% endjavascripts  %}
+        {% endblock %}
         {% block javascripts %}{% endblock %}
     </body>
 </html>

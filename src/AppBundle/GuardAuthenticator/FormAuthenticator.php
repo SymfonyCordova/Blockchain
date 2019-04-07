@@ -36,20 +36,20 @@ class FormAuthenticator implements SimpleFormAuthenticatorInterface
     {
         $code = $this->getRequestPostAttribute('code');
         $verifyCode = $this->getSessionAttribute('captcha');
-        if($code !== $verifyCode || $code || $verifyCode){
+        if($code !== $verifyCode){
             throw new CustomUserMessageAuthenticationException('您输入的用验证码错误:'.$code);
         }
 
         try{
             $user = $userProvider->loadUserByUsername($token->getUser());
         }catch (UsernameNotFoundException $e){
-            throw new CustomUserMessageAuthenticationException('您输入的用户名和密码错误');
+            throw new CustomUserMessageAuthenticationException('您输入的用户名或密码错误');
         }
 
         $passwordValid = $this->encoder->isPasswordValid($user, $token->getCredentials());
 
         if(!$passwordValid){
-            throw new CustomUserMessageAuthenticationException('您输入的用户名和密码错误');
+            throw new CustomUserMessageAuthenticationException('您输入的用户名或密码错误');
         }
 
         return new UsernamePasswordToken(
