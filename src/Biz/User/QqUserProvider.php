@@ -1,14 +1,37 @@
 <?php
 namespace Biz\User;
 
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Biz\User\Service\UserconnectionService;
+use Codeages\Biz\Framework\Context\Biz;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class QqUserProvider implements UserProviderInterface{
-    public function loadUserByUsername($username)
+
+    private $container;
+
+    /**
+     * QqUserProvider constructor.
+     * @param $container
+     */
+    public function __construct($container)
     {
-        return new QqUser($username);
+        $this->container = $container;
+    }
+
+
+    public function loadUserByUsername($params)
+    {
+        $user = $this->getUserConnService()->getByOpenId($params['openid']);
+        $user['register'] = true;
+        if(empty($user)){
+            $user = new QqUser();
+            $user->setData($params);
+            $user->setRoles(array('ROLE_THIRD_USER'));
+            $user['register'] = !$user['register'];
+        }
+
+        return $user;
     }
 
     /**
@@ -16,10 +39,7 @@ class QqUserProvider implements UserProviderInterface{
      */
     public function refreshUser(UserInterface $user)
     {
-        if(!$user instanceof QqUser){
-            throw new UsernameNotFoundException(sprintf('Instances of "%s" are not supported.', get_class($user)));
-        }
-        return $this->loadUserByUsername($user->getUsername());
+        return $user;
     }
 
     public function supportsClass($class)
@@ -27,4 +47,18 @@ class QqUserProvider implements UserProviderInterface{
         return QqUser::class === $class;
     }
 
+    /**
+     * @return UserconnectionService
+     */
+    private function getUserConnService(){
+        return $this->getBiz()->service("User:UserconnectionService");
+    }
+
+
+    /**
+     * @return Biz
+     */
+    private function getBiz(){
+        return $this->container->get('biz');
+    }
 }

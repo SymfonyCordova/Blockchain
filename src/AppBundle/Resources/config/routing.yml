@@ -32,3 +32,8 @@ auth_qq:
     path: /auth/qq
     defaults: { _controller: AppBundle:Auth:qq }
     methods: [GET, POST]
+
+qq_register:
+    path: /qq/register
+    defaults: { _controller: AppBundle:Auth:qqRegister }
+    methods: [POST, GET]
