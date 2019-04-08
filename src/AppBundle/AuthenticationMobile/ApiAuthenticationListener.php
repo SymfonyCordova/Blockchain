@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager
  *
  * 并在认证成功时，于token storage中设置一个authenticated token（已认证token）。
  */
-class SmsCodeAuthenticationListener implements ListenerInterface{
+class ApiAuthenticationListener implements ListenerInterface{
     /**
      * @var TokenStorage
      */
@@ -47,7 +47,7 @@ class SmsCodeAuthenticationListener implements ListenerInterface{
             return;
         }
 
-        $token = new SmsCodeAuthenticationToken();
+        $token = new ApiAuthenticationToken();
         $token->setUser($matches[1]);
 
         $token->digest   = $matches[2];

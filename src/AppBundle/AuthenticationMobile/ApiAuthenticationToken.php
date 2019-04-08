@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
  * 首先，创建你的token类。它可以把相关的全部信息传入你的authentication provider。
  *
  */
-class SmsCodeAuthenticationToken extends AbstractToken
+class ApiAuthenticationToken extends AbstractToken
 {
     public $created;
     public $digest;

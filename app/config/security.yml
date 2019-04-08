@@ -26,6 +26,9 @@ services:
         class: AppBundle\GuardAuthenticator\QqGuardAuthenticator
         arguments: ["@service_container", "%qq_app_id%", "%qq_app_secret%"]
 
+    form.authentication.success_handler:
+        class: AppBundle\Handle\AuthenticationSuccessHandler
+
 security:
     providers:
         user_provider:
@@ -62,6 +65,7 @@ security:
                 authenticator: app.simple_form_authenticator
                 login_path: login
                 check_path: login
+                # success_handler: form.authentication.success_handler
             guard:
                 authenticators:
                     - app.mobile_code_authenticator

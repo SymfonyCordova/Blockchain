@@ -11,7 +11,6 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-
         return parent::onAuthenticationSuccess($request, $token);
     }
 
