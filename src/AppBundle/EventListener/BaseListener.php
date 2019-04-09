@@ -1,7 +1,9 @@
 <?php
 namespace AppBundle\EventListener;
 
+use Codeages\Biz\Framework\Context\Biz;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 abstract class BaseListener
 {
@@ -35,8 +37,19 @@ abstract class BaseListener
         return false;
     }
 
+    /**
+     * @return Biz
+     */
+    protected function getBiz(){
+        return $this->container->get('biz');
+    }
+
     protected function createService($alias)
     {
-        return $this->container->get('biz')->service($alias);
+        return $this->getBiz()->service($alias);
+    }
+
+    protected function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH){
+        return $this->container->get('router')->generate($route, $parameters, $referenceType);
     }
 }

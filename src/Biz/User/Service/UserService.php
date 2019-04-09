@@ -27,4 +27,12 @@ interface UserService
      * @return mixed
      */
     public function getUserByLoginField($keyword);
+
+    /**
+     * 登陆时记住用户登陆的session
+     * @param $id
+     * @param $sessionId
+     * @return mixed
+     */
+    public function rememberLoginSessionId($id, $sessionId);
 }

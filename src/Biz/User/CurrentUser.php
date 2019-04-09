@@ -166,6 +166,11 @@ class CurrentUser implements AdvancedUserInterface, EquatableInterface, \Seriali
         return $this;
     }
 
+    public function isLogin()
+    {
+        return empty($this->id) ? false : true;
+    }
+
     public function offsetExists($offset)
     {
         return $this->__isset($offset);

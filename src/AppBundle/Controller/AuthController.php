@@ -2,6 +2,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Codeages\Biz\Framework\Session\Handler\BizSessionHandler;
 
 class AuthController extends BaseController{
     public function qqAction(Request $request){

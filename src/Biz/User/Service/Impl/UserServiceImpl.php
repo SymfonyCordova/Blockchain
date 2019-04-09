@@ -5,7 +5,6 @@ use Biz\BaseService;
 use Biz\User\Service\UserService;
 use AppBundle\Common\ArrayToolkit;
 use Biz\Common\Exception\InvalidArgumentException;
-use Biz\Common\Exception\AccessDeniedException;
 use Biz\Common\Exception\NotFoundException;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use AppBundle\Common\SimpleValidator;
@@ -13,6 +12,20 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 class UserServiceImpl extends BaseService implements UserService
 {
+    public function rememberLoginSessionId($id, $sessionId)
+    {
+        $user = $this->getUser($id);
+
+        if(empty($user)){
+            throw new NotFoundException(sprintf('User id#%s not found', $id));
+        }
+
+        return $this->getUserDao()->update($id, array(
+            'login_session_id' => $sessionId
+        ));
+    }
+
+
     public function getUser($id)
     {
         return $this->getUserDao()->get($id);

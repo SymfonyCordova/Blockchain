@@ -2,9 +2,10 @@
 
 namespace AppBundle\Handler;
 
-use Biz\Role\Util\PermissionBuilder;
+use Biz\User\Service\UserService;
+use Codeages\Biz\Framework\Context\Biz;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-use Topxia\Service\Common\ServiceKernel;
 use Doctrine\Bundle\DoctrineBundle\Registry as Doctrine;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
@@ -19,13 +20,19 @@ class LoginSuccessHandler
     private $checker;
 
     /**
+     * @var
+     */
+    private $container;
+
+    /**
      * Constructor.
      *
      * @param AuthorizationChecker $checker
      * @param Doctrine             $doctrine
      */
-    public function __construct(AuthorizationChecker $checker)
+    public function __construct(ContainerInterface $container, AuthorizationChecker $checker)
     {
+        $this->container = $container;
         $this->checker = $checker;
     }
 
@@ -46,19 +53,29 @@ class LoginSuccessHandler
 
         // do some other magic here
         $user = $event->getAuthenticationToken()->getUser();
-        $user->setPermissions(PermissionBuilder::instance()->getPermissionsByRoles($user->getRoles()));
+        //$user->setPermissions(PermissionBuilder::instance()->getPermissionsByRoles($user->getRoles()));
 
         $request = $event->getRequest();
         $sessionId = $request->getSession()->getId();
-        $request->getSession()->set('loginIp', $request->getClientIp());
+        //$request->getSession()->set('loginIp', $request->getClientIp());
 
-        $this->getUserService()->markLoginInfo();
+        //$this->getUserService()->markLoginInfo();
         $this->getUserService()->rememberLoginSessionId($user['id'], $sessionId);
-        $this->getUserService()->markLoginSuccess($user['id'], $request->getClientIp());
+        //$this->getUserService()->markLoginSuccess($user['id'], $request->getClientIp());
     }
 
+    /**
+     * @return UserService
+     */
     private function getUserService()
     {
-        return ServiceKernel::instance()->createService('User:UserService');
+        return $this->getBiz()->service("User:UserService");
+    }
+
+    /**
+     * @return Biz
+     */
+    private function getBiz(){
+        return $this->container->get('biz');
     }
 }
