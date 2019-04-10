@@ -8,6 +8,9 @@ login:
     defaults: { _controller: AppBundle:Login:index }
     methods: [GET, POST]
 
+logout:
+    path: /logout
+
 phone_code_login:
     path: /phone/login
     defaults: { _controller: AppBundle:Phone:login }

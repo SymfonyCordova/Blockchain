@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block title %}区块链管理后台{% endblock %}
+{% block body %}
+    {% block body_header %}
+        欢迎您, {{ app.user.username }} !<a href="{{ path('logout') }}">退出</a>
+    {% endblock %}
+    {% block body_context %}
+    {% endblock %}
+    {% block body_footer %}
+        版权所有
+    {% endblock %}
+{% endblock %}

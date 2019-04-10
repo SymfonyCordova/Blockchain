@@ -26,6 +26,10 @@ services:
         class: AppBundle\GuardAuthenticator\QqGuardAuthenticator
         arguments: ["@service_container", "%qq_app_id%", "%qq_app_secret%"]
 
+#    app.logout.success_handler:
+#        class: AppBundle\Handler\LogoutSuccessHandler
+#        parent: security.logout.success_handler
+
 security:
     providers:
         user_provider:
@@ -47,11 +51,12 @@ security:
 
         qq_area:
             anonymous: ~
-            pattern: ^/auth/.+
+            pattern: ^/auth/q.+
             provider: qq_provider
             guard:
                 authenticators:
                     - app.qq_authenticator
+
         main:
             anonymous: ~
             remember_me:
@@ -65,6 +70,9 @@ security:
             guard:
                 authenticators:
                     - app.mobile_code_authenticator
+            logout:
+                path:   /logout
+#                success_handler: app.logout.success_handler
 #            form_login:
 #                login_path: login
 #                check_path: login

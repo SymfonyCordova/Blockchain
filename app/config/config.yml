@@ -9,11 +9,6 @@ imports:
 parameters:
     locale: en
     app.csrf.token_id.default: _csrf_token
-    redis.prefix: symfony_session_
-    redis.expiretime: 86400
-    redis.host: 10.0.40.221
-    redis.port: 6379
-    redis.timeout: 2
 
 services:
     redis:
@@ -21,12 +16,12 @@ services:
         calls:
             - [ connect, ['%redis.host%', '%redis.port%', '%redis.timeout%'] ]
 
-    session.handler.pdo:
-        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
-        public: false
-        arguments:
-            - 'mysql:host=%database_host%;port=%database_port%;dbname=%database_name%'
-            - { db_username: '%database_user%', db_password: '%database_password%' }
+#    session.handler.pdo:
+#        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+#        public: false
+#        arguments:
+#            - 'mysql:host=%database_host%;port=%database_port%;dbname=%database_name%'
+#            - { db_username: '%database_user%', db_password: '%database_password%' }
 
     session.handler.redis:
         class: AppBundle\Handler\RedisSessionHandler
@@ -53,7 +48,7 @@ framework:
     session:
         # handler_id set to null will use default session handler from php.ini
         handler_id: session.handler.redis
-        # gc_maxlifetime: 7200
+#        gc_maxlifetime: 7200
     fragments: ~
     http_method_override: true
 

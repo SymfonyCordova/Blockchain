@@ -11,9 +11,7 @@ class AdminController extends BaseController
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
         }
-        $user = $this->getUser();
-
-        return  new JsonResponse(array("password"=>$user['password'], "salt"=>$user['salt']));
+        return  $this->render("AppBundle:admin:default.html.twig", array());
     }
 
     /**

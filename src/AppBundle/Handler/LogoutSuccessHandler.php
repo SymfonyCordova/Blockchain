@@ -2,7 +2,6 @@
 
 namespace AppBundle\Handler;
 
-use Topxia\Service\Common\ServiceKernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 
@@ -47,20 +46,5 @@ class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
         $setting = $this->getSettingService()->get('login_bind');
 
         return isset($setting['enabled']) && isset($setting['weixinmob_enabled']) && $setting['enabled'] && $setting['weixinmob_enabled'];
-    }
-
-    private function getAuthService()
-    {
-        return ServiceKernel::instance()->createService('User:AuthService');
-    }
-
-    public function isMicroMessenger($request)
-    {
-        return strpos($request->headers->get('User-Agent'), 'MicroMessenger') !== false;
-    }
-
-    protected function getSettingService()
-    {
-        return ServiceKernel::instance()->createService('System:SettingService');
     }
 }

@@ -75,7 +75,7 @@ class MobileCodeGuardAuthenticator extends AbstractGuardAuthenticator{
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        return new RedirectResponse($this->generateUrl('admin_homepage'));
+        return new RedirectResponse($this->generateUrl('homepage'));
     }
 
     public function supportsRememberMe()
