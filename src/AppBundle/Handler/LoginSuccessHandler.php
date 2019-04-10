@@ -60,7 +60,8 @@ class LoginSuccessHandler
         //$request->getSession()->set('loginIp', $request->getClientIp());
 
         //$this->getUserService()->markLoginInfo();
-        $this->getUserService()->rememberLoginSessionId($user['id'], $sessionId);
+        $prefix = $this->container->getParameter('redis.prefix');
+        $this->getUserService()->rememberLoginSessionId($user['id'], $prefix.$sessionId);
         //$this->getUserService()->markLoginSuccess($user['id'], $request->getClientIp());
     }
 

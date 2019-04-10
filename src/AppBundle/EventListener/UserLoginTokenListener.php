@@ -6,8 +6,6 @@ use Biz\User\Service\UserService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Http\Firewall;
 
 class UserLoginTokenListener extends BaseListener{
 
@@ -28,19 +26,20 @@ class UserLoginTokenListener extends BaseListener{
         }
 
         $user = $this->getUserService()->getUser($user['id']);
+        $prefix = $this->container->getParameter('redis.prefix');
 
-        if($session->getId() != $user['login_session_id']){
+        if($prefix.$session->getId() != $user['login_session_id']){
             $session->invalidate();
 
             $this->container->get('security.token_storage')->setToken(null);
+
+            $this->getRedis()->delete($prefix.$session->getId());
 
             $goto = $this->generateUrl("login");
 
             $response = new RedirectResponse($goto, '302');
 
             setcookie('REMEMBERME', '', -1);
-
-            $this->container->get('session')->getFlashBag()->add('danger', '此帐号已在别处登录，请重新登录');
 
             $event->setResponse($response);
         }
@@ -53,6 +52,15 @@ class UserLoginTokenListener extends BaseListener{
      */
     private function getUserService(){
         return $this->createService("User:UserService");
+    }
+
+    /**
+     * @return \Redis
+     */
+    private function getRedis(){
+        $biz = $this->getBiz();
+
+        return $biz['redis'];
     }
 
     private function getUser()

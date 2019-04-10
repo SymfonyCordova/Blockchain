@@ -108,13 +108,15 @@ class AppKernel extends Kernel
         $biz->register(new DoctrineServiceProvider());
         $biz->register(new MonologServiceProvider());
         $biz->register(new RedisServiceProvider(), array(
-            'redis.options' => array(
-                'host' => '192.168.1.17:6379',
-                'password' => '',
-                'timeout' => 2,
-                'retry_interval' => 100,
-                'prefix' => '',
-            ),
+//            'redis.options' => array(
+//                'host' => '192.168.1.17:6379',
+//                'password' => '',
+//                'timeout' => 2,
+//                'retry_interval' => 100,
+//                'prefix' => '',
+//            ),
+
+            'redis.options' => $this->getContainer()->getParameter('redis.options'),
         ));
 
 //        $providerCollector = $this->getContainer()->get('biz.service_provider.collector');
